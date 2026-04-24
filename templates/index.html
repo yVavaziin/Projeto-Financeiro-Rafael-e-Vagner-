@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financeiro Pro (R&V) | Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="main-container">
+        
+        <main class="dashboard-left">
+            <header class="balance-header">
+                <div class="balance-card">
+                    <small>Despesa Total Acumulada</small>
+                    <h1 class="text-green">R$ {{ "%.2f"|format(resumo.total_geral) }}</h1>
+                </div>
+                
+                <div class="report-highlight">
+                    <div class="mini-card highlight">
+                        <i class="fa-solid fa-trophy"></i>
+                        <div>
+                            <strong>Maior Gasto:</strong><br>
+                            <span>{{ resumo.cartao_lider }} (R$ {{ "%.2f"|format(resumo.valor_lider) }})</span>
+                        </div>
+                    </div>
+                    <div class="mini-card">
+                        <i class="fa-solid fa-magnifying-glass-dollar"></i>
+                        <strong>Busca Aluguel:</strong> {{ resumo.busca }}
+                    </div>
+                </div>
+            </header>
+
+            <section class="wallets-area">
+                {% for banco, gastos in carteiras.items() %}
+                <div class="banco-group">
+                    <div class="banco-header-flex">
+                        <h2 class="banco-label"><i class="fa-solid fa-wallet"></i> {{ banco }}</h2>
+                        <button class="btn-delete-mini" onclick="deletarBanco('{{ banco }}')">
+                            <i class="fa-solid fa-trash-can"></i> Cancelar Cartão
+                        </button>
+                    </div>
+
+                    <div class="cards-grid">
+                        {% for g in gastos %}
+                        <div class="transaction-card">
+                            <div class="card-icon">
+                                <i class="fa-solid {{ g.icone_banco }}"></i>
+                            </div>
+                            <div class="card-info">
+                                <span class="desc">{{ g.desc }}</span>
+                                <span class="status {{ 'high' if g.status == 'Gasto alto' else 'ok' }}">{{ g.status }}</span>
+                            </div>
+                            <div class="card-price-group">
+                                <div class="card-price">R$ {{ "%.2f"|format(g.valor) }}</div>
+                                <button class="btn-del-gasto" onclick="deletarGasto('{{ banco }}', {{ loop.index0 }})">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </section>
+        </main>
+
+        <aside class="dashboard-right">
+            <div class="launch-card">
+                <h3><i class="fa-solid fa-file-invoice-dollar"></i> Detalhar Compra</h3>
+                <p>Vincule seus gastos aos cartões ou PIX.</p>
+
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-credit-card"></i>
+                        <select id="seletor-banco-modo" onchange="alternarModoBanco()" class="select-destaque">
+                            <option value="" disabled selected>Selecionar Cartão...</option>
+                            <option value="existente">💳 Cartão já salvo</option>
+                            <option value="novo">✨ Novo Cartão</option>
+                            <option value="pix">⚡ PIX / Débito</option>
+                        </select>
+                    </div>
+
+                    <div id="area-existente" class="input-wrapper sub-input-group" style="display: none;">
+                        <i class="fa-solid fa-list-check"></i>
+                        <select id="banco-lista">
+                            <option value="">Qual cartão usar?</option>
+                            {% for nome in carteiras.keys() %}
+                                <option value="{{ nome }}">{{ nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div id="area-novo" class="input-wrapper sub-input-group" style="display: none;">
+                        <i class="fa-solid fa-plus"></i>
+                        <input type="text" id="banco-novo" placeholder="Ex: Nubank Ultra">
+                    </div>
+
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <input type="text" id="desc" placeholder="O que você comprou?">
+                    </div>
+
+                    <div class="row-inputs">
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-money-bill-1"></i>
+                            <input type="number" id="valor" placeholder="R$ 0,00">
+                        </div>
+
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            <select id="parcelas">
+                                <option value="1">À vista</option>
+                                <option value="2">2x</option>
+                                <option value="3">3x</option>
+                                <option value="6">6x</option>
+                                <option value="10">10x</option>
+                                <option value="12">12x</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-wrapper">
+    <i class="fa-solid fa-layer-group"></i>
+    <select id="cat" onchange="verificarOutros()"> <option value="Alimentação">Alimentação</option>
+        <option value="Saúde">Saúde</option>
+        <option value="Lazer">Lazer</option>
+        <option value="Educação">Educação</option>
+        <option value="Moradia">Moradia</option>
+        <option value="Outros">Outros...</option>
+    </select>
+</div>
+
+<div id="area-outros" class="input-wrapper sub-input-group" style="display: none;">
+    <i class="fa-solid fa-pen-to-square"></i>
+    <input type="text" id="cat-especifica" placeholder="Qual a categoria? (ex: Presente, Pet...)">
+</div>
+                    
+                    <button onclick="enviarGasto()" class="btn-primary">Confirmar Lançamento</button>
+                </div>
+            </div>
+
+            <div class="mini-card future-chart">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Análise visual em breve...</span>
+            </div>
+        </aside>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
