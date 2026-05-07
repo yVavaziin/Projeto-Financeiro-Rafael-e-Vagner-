@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Finance+</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<header class="navbar">
+  <h2>💸 Finance+</h2>
+  <button onclick="logout()">Sair</button>
+</header>
+
+<div class="dashboard-grid">
+
+  <div class="card">
+    <h3>💳 Contas</h3>
+
+    <input id="nomeConta" placeholder="Nome da conta">
+    <input id="saldoConta" placeholder="Saldo">
+
+    <button class="btn" onclick="salvarConta()">Adicionar Conta</button>
+
+    <div id="contas"></div>
+  </div>
+
+  <div class="card">
+    <h3>💰 Resumo</h3>
+    <p>Total: <span id="total"></span></p>
+  </div>
+
+  <div class="card">
+    <h3>📊 Análise</h3>
+
+    <button class="btn" onclick="gerarGraficos()">Gerar gráficos</button>
+
+    <canvas id="graficoPizza"></canvas>
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<div id="toast" class="toast"></div>
+</body>
+</html>

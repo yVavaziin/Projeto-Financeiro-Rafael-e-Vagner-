@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Finance+</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+  <h2>💸 Finance+</h2>
+  <div>
+    <a href="/login"><button class="btn">Login</button></a>
+    <a href="/cadastro"><button class="btn">Cadastrar</button></a>
+  </div>
+</header>
+
+<section style="text-align:center; padding:40px;">
+  <h1>Controle total da sua vida financeira</h1>
+  <p>Gerencie contas, acompanhe gastos e visualize seus dados em gráficos</p>
+
+  <button class="btn" onclick="mostrarLogin()">Começar 🚀</button>
+</section>
+
+<!-- LOGIN -->
+<div id="boxLogin" class="form-box" style="display:none;">
+  <h2>Login</h2>
+  <input id="email" placeholder="Email">
+  <input id="senha" type="password" placeholder="Senha">
+  <button class="btn" onclick="logar()">Entrar</button>
+</div>
+
+<script>
+function mostrarLogin() {
+  document.getElementById("boxLogin").style.display = "block";
+}
+
+function logar() {
+  fetch('/api/login', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      email: email.value,
+      senha: senha.value
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error();
+    return res.json();
+  })
+  .then(() => {
+    window.location.href = "/dashboard";
+  })
+  .catch(() => alert("Login inválido"));
+}
+</script>
+
+</body>
+</html>

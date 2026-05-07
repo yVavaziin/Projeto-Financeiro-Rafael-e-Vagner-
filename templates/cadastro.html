@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cadastro</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="form-box">
+  <h2>Cadastro</h2>
+
+  <input id="nome" placeholder="Nome">
+  <input id="email" placeholder="Email">
+  <input id="senha" type="password" placeholder="Senha">
+
+  <button class="btn" type="button" onclick="cadastrar()">Cadastrar</button>
+
+  <p>Já tem conta? <a href="/login">Login</a></p>
+</div>
+
+<script>
+function cadastrar() {
+  const nome = document.getElementById("nome").value;
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
+
+  if (!nome || !email || !senha) {
+    alert("Preencha todos os campos!");
+    return;
+  }
+
+  fetch('/api/cadastro', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ nome, email, senha })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error();
+    return res.json();
+  })
+  .then(() => {
+    alert("Cadastrado com sucesso!");
+    window.location.href = "/login";
+  })
+  .catch(() => {
+    alert("Erro ao cadastrar (email pode já existir)");
+  });
+}
+</script>
+
+</body>
+</html>
