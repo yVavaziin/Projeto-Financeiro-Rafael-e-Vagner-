@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Finance+</title>
+  <link rel="stylesheet" href="css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<header class="navbar">
+  <h2>Finance+</h2>
+  <div class="user-area">
+    <img id="fotoPerfil">
+    <span id="nomeUsuario"></span>
+    <button onclick="logout()">Sair</button>
+  </div>
+</header>
+
+<div class="dashboard-grid">
+
+  <!-- PERFIL -->
+  <div class="card">
+    <h3>👤 Perfil</h3>
+    <input type="file" id="uploadFoto">
+    <input type="text" id="nomePerfil" placeholder="Seu nome">
+    <button onclick="salvarPerfil()">Salvar</button>
+  </div>
+
+  <!-- RESUMO -->
+  <div class="card">
+    <h3>💰 Resumo</h3>
+    <p>Total: <span id="total"></span></p>
+    <p class="entrada">Entradas: <span id="entradas"></span></p>
+    <p class="saida">Saídas: <span id="saidas"></span></p>
+  </div>
+
+  <!-- CONTAS -->
+  <div class="card">
+    <h3>💳 Contas</h3>
+    <div id="contas"></div>
+    <button onclick="abrirModal()">+ Conta</button>
+  </div>
+
+  <!-- HISTÓRICO -->
+  <div class="card">
+    <h3>📅 Histórico</h3>
+    <select id="filtroTipo" onchange="renderTransacoes()">
+      <option value="todos">Todos</option>
+      <option value="entrada">Entradas</option>
+      <option value="saida">Saídas</option>
+    </select>
+    <ul id="extrato"></ul>
+  </div>
+
+  <!-- GRÁFICOS -->
+  <div class="card">
+    <h3>📊 Análise</h3>
+
+    <button onclick="toggleGraficos()">Ver gráficos</button>
+
+    <div id="graficosBox" class="hidden">
+      <button onclick="mostrarPizza()">Pizza</button>
+      <button onclick="mostrarLinha()">Linha</button>
+
+      <canvas id="graficoPizza"></canvas>
+      <canvas id="graficoLinha"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <input id="nomeConta" placeholder="Nome">
+    <input id="saldoConta" placeholder="Saldo">
+    <button onclick="salvarConta()">Salvar</button>
+  </div>
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>

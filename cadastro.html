@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro - Finance+</title>
+
+  <!-- ✅ corrigido (sem pasta) -->
+  <link rel="stylesheet" href="css/cadastro.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="login-box">
+    <h2>Criar Conta</h2>
+    <p>Cadastre-se para começar</p>
+
+    <form id="cadastroForm">
+
+      <div class="input-group">
+        <label>Nome</label>
+        <input type="text" id="nome" required>
+      </div>
+
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="email" required>
+      </div>
+
+      <div class="input-group">
+        <label>Senha</label>
+        <input type="password" id="senha" required>
+      </div>
+
+      <button type="submit">Cadastrar</button>
+
+    </form>
+
+    <div class="extras">
+      <p>Já tem conta? <a href="login.html">Entrar</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ escolha UMA opção -->
+
+<!-- OPÇÃO 1: JS separado -->
+<script src="cadastro.js"></script>
+
+<!-- OPÇÃO 2 (se quiser deixar aqui dentro, usa isso e REMOVE o de cima)
+<script>
+const form = document.getElementById('cadastroForm');
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const nome = document.getElementById('nome').value;
+  const email = document.getElementById('email').value;
+  const senha = document.getElementById('senha').value;
+
+  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+  const existe = usuarios.find(user => user.email === email);
+
+  if (existe) {
+    alert("Esse email já está cadastrado!");
+    return;
+  }
+
+  usuarios.push({ nome, email, senha });
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+  alert("Cadastro realizado com sucesso!");
+  window.location.href = "login.html";
+});
+</script>
+-->
+
+</body>
+</html>
